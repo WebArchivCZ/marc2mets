@@ -1,0 +1,72 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+common:
+
+	parameters:
+		oaiPhm:
+			url: http://aleph.nkp.cz:8991/OAI # url of oaiPhm provider
+
+		settingsXml:
+			directory: jobs # subdirectory where we should look for urls
+			pattern: 'Settings*.xml' # only files matching this pattern will add their directories to urls
+
+		marc:
+			identifierFormat: 'oai:aleph-nkp.cz:NKC01-%s' # format is parsed by sprintf use %s to preserve leading zeroes
+
+		marc2mods:
+			template: '%appDir%/data/MARC21slim2MODS3-4.xsl'
+
+		wadmin:
+			driver: mysql
+			host:
+			dbname:
+			user:
+			password:
+
+
+	php:
+		date.timezone: Europe/Prague
+
+
+	nette:
+		database:
+			wadmin:
+				dsn: '%wadmin.driver%:host=%wadmin.host%;dbname=%wadmin.dbname%'
+				user: %wadmin.user%
+				password: %wadmin.password%
+				options: [
+					PDO::MYSQL_ATTR_INIT_COMMAND = 'SET NAMES "UTF8"'
+				]
+
+
+	services:
+		oaiPmhClient: oaipmh\OAIPMHClient(%oaiPhm.url%)
+
+		convertCommand:
+			class: ConvertCommand
+			tags: [kdyby.console.command]
+			autowired: no
+
+		alephUrlResolver: AlephUrlResolver(TableFactory(..., resources))
+		marcRetriever: MarcRetriever(..., %marc.identifierFormat%)
+		marcToModsConvertor: MarcToModsConvertor(%marc2mods.template%)
+		conversionProcess: ConversionProcess
+
+		settingsFileUrlExtractor:
+			class: SettingsFileUrlExtractor
+			setup:
+				- setPattern(%settingsXml.pattern%)
+				- setDirectory(%settingsXml.directory%)
+
+
+	console:
+		url: http://localhost # only to suppress warning - <3 hosiplan
+
+
+production < common:
+
+development < common:

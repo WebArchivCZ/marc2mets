@@ -1,0 +1,43 @@
+{
+	"name": "nkp/marc2mods",
+	"license": "proprietary",
+	"type": "project",
+	"authors": [
+		{
+			"name": "Michal Gebauer",
+			"homepage": "http://mishak.net"
+		}
+	],
+	"config": {
+		"vendor-dir": "libs"
+	},
+	"require": {
+		"php": ">= 5.3.0",
+		"ext-xsl": "*",
+		"nette/nette": "2.0.11",
+		"kdyby/console": "1.1.3",
+		"kraenhansen/OAI-PMH-PHP-Client": "@dev"
+	},
+	"repositories": [
+		{
+			"type": "package",
+			"package": {
+				"name": "kraenhansen/OAI-PMH-PHP-Client",
+				"version": "master",
+				"dist": {
+					"url": "https://github.com/kraenhansen/OAI-PMH-PHP-Client/archive/master.zip",
+					"type": "zip"
+				},
+				"source": {
+					"type": "git",
+					"url": "https://github.com/kraenhansen/OAI-PMH-PHP-Client.git",
+					"reference": "master"
+				},
+				"autoload": {
+					"classmap": ["src/"]
+				}
+			}
+		}
+	]
+
+}
