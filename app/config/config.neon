@@ -57,7 +57,7 @@ common:
 		conversionProcess: ConversionProcess
 
 		settingsFileUrlExtractor:
-			class: SettingsFileUrlExtractor
+			class: Extractors\SettingsFileUrlExtractor
 			setup:
 				- setPattern(%settingsXml.pattern%)
 				- setDirectory(%settingsXml.directory%)

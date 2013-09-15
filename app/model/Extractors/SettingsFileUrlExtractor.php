@@ -1,5 +1,7 @@
 <?php
 
+namespace Extractors;
+
 
 class SettingsFileUrlExtractor extends \Nette\Object implements \IUrlExtractor
 {
