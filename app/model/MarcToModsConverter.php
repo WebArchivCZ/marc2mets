@@ -1,7 +1,5 @@
 <?php
 
-use Nette\Utils\Validators;
-
 
 class MarcToModsConverter extends Nette\Object
 {
