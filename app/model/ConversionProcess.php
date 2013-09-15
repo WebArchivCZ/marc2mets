@@ -10,19 +10,19 @@ class ConversionProcess extends Nette\Object
 
 	private $retriever;
 
-	private $convertor;
+	private $converter;
 
 	private $urls;
 
 	private $ids;
 
 
-	public function __construct(SettingsFileUrlExtractor $urlExtractor, AlephUrlResolver $alephUrlResolver, MarcRetriever $retriever, MarcToModsConvertor $convertor)
+	public function __construct(SettingsFileUrlExtractor $urlExtractor, AlephUrlResolver $alephUrlResolver, MarcRetriever $retriever, MarcToModsConverter $converter)
 	{
 		$this->urlExtractor = $urlExtractor;
 		$this->alephUrlResolver = $alephUrlResolver;
 		$this->retriever = $retriever;
-		$this->convertor = $convertor;
+		$this->converter = $converter;
 	}
 
 
@@ -56,7 +56,7 @@ class ConversionProcess extends Nette\Object
 		}
 		foreach ($this->ids as $url => $id) {
 			$marc = $this->retriever->get($id);
-			$modsXml = $this->convertor->convert($marc);
+			$modsXml = $this->converter->convert($marc);
 			$filename = dirname(array_search($url, $this->urls, TRUE));
 			$filename .= DIRECTORY_SEPARATOR;
 			$filename .= 'Mets_' . rtrim(preg_replace('~^https?://~', '', $url), '/') . '.xml';
