@@ -17,7 +17,7 @@ class ConversionProcess extends Nette\Object
 	private $ids;
 
 
-	public function __construct(SettingsFileUrlExtractor $urlExtractor, AlephUrlResolver $alephUrlResolver, MarcRetriever $retriever, MarcToModsConverter $converter)
+	public function __construct(IUrlExtractor $urlExtractor, AlephUrlResolver $alephUrlResolver, MarcRetriever $retriever, MarcToModsConverter $converter)
 	{
 		$this->urlExtractor = $urlExtractor;
 		$this->alephUrlResolver = $alephUrlResolver;

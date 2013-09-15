@@ -1,7 +1,7 @@
 <?php
 
 
-class SettingsFileUrlExtractor extends \Nette\Object
+class SettingsFileUrlExtractor extends \Nette\Object implements \IUrlExtractor
 {
 
 	private $pattern = 'Settings*.xml';
