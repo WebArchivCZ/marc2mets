@@ -20,6 +20,10 @@ common:
 			directory: jobs # subdirectory where we should look for urls
 			pattern: 'Settings*.xml' # only files matching this pattern will add their directories to urls
 
+		cdx:
+			directory: jobs # subdirectory where we should look for urls
+			pattern: '*.cdx' # only files matching this pattern will add their directories to urls
+
 		marc:
 			identifierFormat: 'oai:aleph-nkp.cz:NKC01-%s' # format is parsed by sprintf use %s to preserve leading zeroes
 
@@ -72,11 +76,19 @@ common:
 				- setDirectory(%settingsXml.directory%)
 			autowired: no
 
+		cdxFileUrlExtractor:
+			class: Extractors\CdxFileUrlExtractor
+			setup:
+				- setPattern(%cdx.pattern%)
+				- setDirectory(%cdx.directory%)
+				- setAppendHigherDomains(TRUE)
+			autowired: no
 
 		groupedUrlExtractor:
 			class: Extractors\GroupedUrlExtractor
 			setup:
 				- addExtractor(@settingsFileUrlExtractor)
+				- addExtractor(@cdxFileUrlExtractor)
 
 	console:
 		url: http://localhost # only to suppress warning - <3 hosiplan
