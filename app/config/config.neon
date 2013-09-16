@@ -10,6 +10,12 @@ common:
 		oaiPhm:
 			url: http://aleph.nkp.cz:8991/OAI # url of oaiPhm provider
 
+		process:
+			# Output directory is created in directory specified by --directory option (current is default)
+			# Value is parsed by printf only parameter is reversed domain chunks of host joined by directory separator
+			# ie.: www.abcd.cz => cz/abcd/www
+			outputDirectory: 'jobs/%s'
+
 		settingsXml:
 			directory: jobs # subdirectory where we should look for urls
 			pattern: 'Settings*.xml' # only files matching this pattern will add their directories to urls
@@ -54,7 +60,10 @@ common:
 		alephUrlResolver: AlephUrlResolver(TableFactory(..., resources))
 		marcRetriever: MarcRetriever(..., %marc.identifierFormat%)
 		marcToModsConverter: MarcToModsConverter(%marc2mods.template%)
-		conversionProcess: ConversionProcess
+		conversionProcess:
+			class: ConversionProcess
+			setup:
+				- setDefaultOutputDirectory(%process.outputDirectory%)
 
 		settingsFileUrlExtractor:
 			class: Extractors\SettingsFileUrlExtractor

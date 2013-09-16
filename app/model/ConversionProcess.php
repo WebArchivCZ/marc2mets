@@ -16,6 +16,10 @@ class ConversionProcess extends Nette\Object
 
 	private $ids;
 
+	private $directory;
+
+	private $defaultOutputDirectory;
+
 
 	public function __construct(IUrlExtractor $urlExtractor, AlephUrlResolver $alephUrlResolver, MarcRetriever $retriever, MarcToModsConverter $converter)
 	{
@@ -28,7 +32,7 @@ class ConversionProcess extends Nette\Object
 
 	public function discoverUrls($directory)
 	{
-		return count($this->urls = $this->urlExtractor->getUrls($directory));
+		return count($this->urls = $this->urlExtractor->getUrls($this->directory = $directory));
 	}
 
 
@@ -49,22 +53,37 @@ class ConversionProcess extends Nette\Object
 	}
 
 
+	public function setDefaultOutputDirectory($directory)
+	{
+		$this->defaultOutputDirectory = $directory;
+	}
+
+
 	public function convert($onConvert)
 	{
 		if (!is_callable($onConvert)) {
 			$onConvert = NULL;
 		}
-		foreach ($this->ids as $url => $id) {
+		foreach ($this->ids as $host => $id) {
 			$marc = $this->retriever->get($id);
 			$modsXml = $this->converter->convert($marc);
-			$filename = dirname(array_search($url, $this->urls, TRUE));
-			$filename .= DIRECTORY_SEPARATOR;
-			$filename .= 'Mets_' . rtrim(preg_replace('~^https?://~', '', $url), '/') . '.xml';
-			file_put_contents($filename, $modsXml);
+			$directory = array_search($host, $this->urls, TRUE);
+			$directory = dirname(is_int($directory) ? $this->getOutputDirectory($host) : $directory);
+			$filename = 'Mets_' . rtrim(preg_replace('~^https?://~', '', $host), '/') . '.xml';
+			if (!is_dir($directory)) {
+				mkdir($directory, 0777, TRUE);
+			}
+			file_put_contents($directory . DIRECTORY_SEPARATOR . $filename, $modsXml);
 			if ($onConvert !== NULL) {
 				$onConvert($filename);
 			}
 		}
+	}
+
+
+	private function getOutputDirectory($host)
+	{
+		return $this->directory . DIRECTORY_SEPARATOR . sprintf($this->defaultOutputDirectory, implode(DIRECTORY_SEPARATOR, array_reverse(explode('.', $host))));
 	}
 
 }
