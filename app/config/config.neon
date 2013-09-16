@@ -70,7 +70,13 @@ common:
 			setup:
 				- setPattern(%settingsXml.pattern%)
 				- setDirectory(%settingsXml.directory%)
+			autowired: no
 
+
+		groupedUrlExtractor:
+			class: Extractors\GroupedUrlExtractor
+			setup:
+				- addExtractor(@settingsFileUrlExtractor)
 
 	console:
 		url: http://localhost # only to suppress warning - <3 hosiplan
