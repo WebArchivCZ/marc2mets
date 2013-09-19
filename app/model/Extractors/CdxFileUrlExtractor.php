@@ -48,7 +48,12 @@ class CdxFileUrlExtractor extends \Nette\Object implements \IUrlExtractor
     {
         $appendHigherDomains = $this->appendHigherDomains;
         $urls = [];
-        foreach (file($filename, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES) as $line) {
+        $file = fopen($filename, 'r');
+        while (($line = fgets($file)) !== FALSE) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
             list( , , $url) = explode(' ', $line);
             $urls[$host = parse_url($url, PHP_URL_HOST)] = TRUE;
             $fetched[$url] = $host;
