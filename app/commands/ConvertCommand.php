@@ -54,6 +54,7 @@ EOT
 		$progress = $this->getHelper('progress');
 		/** @var Symfony\Component\Console\Helper\ProgressHelper $progress */
 		$output->writeln('Matching urls with AlephIDs...');
+		$progress->setRedrawFrequency(max(1, pow(10, strlen($count) - 2)) /* two grades lower then total count is */);
 		$progress->start($output, $count);
 		$count = $process->resolveUrls(function () use ($progress) {
 			$progress->advance(1);
@@ -62,12 +63,14 @@ EOT
 		$output->writeln('<info>Matched <fg=green>' . $count . '</fg=green> AlephIDs to urls</info>');
 
 		$output->writeln('<info>Retrieving MARC and generating MODS...</info>');
+		$verbosity = $output->getVerbosity();
 		if (!$list) {
 			$progress->start($output, $count);
 		} else {
 			$output->setVerbosity(OutputInterface::VERBOSITY_NORMAL);
 		}
 		$len = strlen($directory);
+		$progress->setRedrawFrequency(max(1, pow(10, strlen($count) - 2)) /* two grades lower then total count is */);
 		$process->convert($list
 			? function ($filename) use ($len, $output, $fullPaths) {
 				$output->writeln($fullPaths ? $filename : ltrim(substr($filename, $len), DIRECTORY_SEPARATOR));
@@ -79,6 +82,8 @@ EOT
 		if (!$list) {
 			$progress->finish();
 		}
+		$output->setVerbosity($verbosity);
+		$output->writeln(sprintf('<info>Memory peak %.2f MB</info>', memory_get_peak_usage(TRUE) / 1024 / 1024));
 	}
 
 }
