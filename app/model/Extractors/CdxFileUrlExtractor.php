@@ -55,7 +55,11 @@ class CdxFileUrlExtractor extends \Nette\Object implements \IUrlExtractor
                 continue;
             }
             list( , , $url) = explode(' ', $line);
-            $urls[$host = parse_url($url, PHP_URL_HOST)] = TRUE;
+            $host = parse_url($url, PHP_URL_HOST);
+            if (isset($urls[$host])) {
+                continue;
+            }
+            $urls[$host] = TRUE;
             if ($appendHigherDomains) {
                 $domains = explode('.', $host);
                 array_shift($domains);
