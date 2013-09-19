@@ -14,7 +14,7 @@ common:
 			# Output directory is created in directory specified by --directory option (current is default)
 			# Value is parsed by printf only parameter is reversed domain chunks of host joined by directory separator
 			# ie.: www.abcd.cz => cz/abcd/www
-			outputDirectory: 'jobs/%s'
+			outputDirectory: 'jobs/dmdmetadata'
 
 		settingsXml:
 			directory: jobs # subdirectory where we should look for urls
