@@ -32,4 +32,21 @@ class MarcRetriever extends Nette\Object
 		return $result->GetRecord->record->metadata->children('marc', TRUE);
 	}
 
+
+	public function tryGet($id, &$marc)
+	{
+		try {
+			$marc = $this->get($id);
+			return TRUE;
+
+		} catch (oaipmh\OAIPMHException $e) {
+			if (strpos($e->getMessage(), 'the format is not supported by the item') !== FALSE) {
+				return FALSE;
+
+			} else {
+				throw $e;
+			}
+		}
+	}
+
 }
