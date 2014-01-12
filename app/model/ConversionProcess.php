@@ -65,17 +65,18 @@ class ConversionProcess extends Nette\Object
 			$onConvert = NULL;
 		}
 		foreach ($this->ids as $host => $id) {
-			$marc = $this->retriever->get($id);
-			$modsXml = $this->converter->convert($marc);
-			$directory = array_search($host, $this->urls, TRUE);
-			$directory = dirname(is_int($directory) ? $this->getOutputDirectory($host) : $directory);
-			$filename = 'Mets_' . rtrim(preg_replace('~^https?://~', '', $host), '/') . '.xml';
-			if (!is_dir($directory)) {
-				mkdir($directory, 0777, TRUE);
-			}
-			file_put_contents($directory . DIRECTORY_SEPARATOR . $filename, $modsXml);
-			if ($onConvert !== NULL) {
-				$onConvert($filename);
+			if ($this->retriever->tryGet($id, $marc)) {
+				$modsXml = $this->converter->convert($marc);
+				$directory = array_search($host, $this->urls, TRUE);
+				$directory = dirname(is_int($directory) ? $this->getOutputDirectory($host) : $directory);
+				$filename = 'Mets_' . rtrim(preg_replace('~^https?://~', '', $host), '/') . '.xml';
+				if (!is_dir($directory)) {
+					mkdir($directory, 0777, TRUE);
+				}
+				file_put_contents($directory . DIRECTORY_SEPARATOR . $filename, $modsXml);
+				if ($onConvert !== NULL) {
+					$onConvert($filename);
+				}
 			}
 		}
 	}
