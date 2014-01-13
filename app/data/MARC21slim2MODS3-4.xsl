@@ -2380,6 +2380,16 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 		</xsl:for-each>
 
 
+		<!-- 015 -->
+
+		<xsl:for-each select="marc:datafield[@tag='015']">
+			<xsl:if test="marc:subfield[@code='a']">
+				<identifier type="ccnb">
+					<xsl:value-of select="marc:subfield[@code='a']"/>
+				</identifier>
+			</xsl:if>
+		</xsl:for-each>
+
 		<!-- 856, 020, 024, 022, 028, 010, 035, 037 -->
 
 		<xsl:for-each select="marc:datafield[@tag='020']">
