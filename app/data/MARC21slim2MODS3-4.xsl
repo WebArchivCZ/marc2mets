@@ -5493,7 +5493,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 					<xsl:value-of select="marc:subfield[@code='2']"/>
 				</xsl:attribute>
 			</xsl:if>
-			<xsl:value-of select="marc:subfield[@code='9']"/>
+			<xsl:value-of select="marc:subfield[@code='a']"/>
 		</classification>
 	</xsl:template>
 
