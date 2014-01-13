@@ -2242,6 +2242,11 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 				<xsl:call-template name="relatedItem76X-78X"/>
 			</relatedItem>
 		</xsl:for-each>
+		<xsl:for-each select="marc:datafield[@tag=787]">
+			<relatedItem type="original">
+				<xsl:call-template name="relatedItem787"/>
+			</relatedItem>
+		</xsl:for-each>
 		<xsl:for-each select="marc:datafield[@tag=800]">
 			<relatedItem type="series">
 				<titleInfo>
@@ -2374,6 +2379,16 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			<xsl:apply-templates select="self::*" mode="trans880"/>
 		</xsl:for-each>
 
+
+		<!-- 015 -->
+
+		<xsl:for-each select="marc:datafield[@tag='015']">
+			<xsl:if test="marc:subfield[@code='a']">
+				<identifier type="ccnb">
+					<xsl:value-of select="marc:subfield[@code='a']"/>
+				</identifier>
+			</xsl:if>
+		</xsl:for-each>
 
 		<!-- 856, 020, 024, 022, 028, 010, 035, 037 -->
 
@@ -2828,6 +2843,13 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			</identifier>
 		</xsl:for-each>
 	</xsl:template>
+	<xsl:template name="relatedIdentifierISBN">
+		<xsl:for-each select="marc:subfield[@code='z']">
+			<identifier type="isbn">
+				<xsl:value-of select="."/>
+			</identifier>
+		</xsl:for-each>
+	</xsl:template>
 	<xsl:template name="relatedIdentifierLocal">
 		<xsl:for-each select="marc:subfield[@code='w']">
 			<identifier type="local">
@@ -2842,6 +2864,13 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			</identifier>
 		</xsl:for-each>
 	</xsl:template>
+    <xsl:template name="relatedPublisher">
+        <xsl:for-each select="marc:subfield[@code='d']">
+            <publisher>
+                <xsl:value-of select="."/>
+            </publisher>
+        </xsl:for-each>
+    </xsl:template>
 
 	<!--tmee 1.40 510 isReferencedBy -->
 	<xsl:template name="relatedItem510">
@@ -2871,6 +2900,13 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 		<xsl:call-template name="relatedIdentifierISSN"/>
 		<xsl:call-template name="relatedIdentifierLocal"/>
 		<xsl:call-template name="relatedPart"/>
+	</xsl:template>
+	<xsl:template name="relatedItem787">
+		<xsl:call-template name="displayLabel"/>
+		<xsl:call-template name="relatedTitle76X-78X"/>
+		<xsl:call-template name="relatedPublisher"/>
+		<xsl:call-template name="relatedIdentifierISSN"/>
+		<xsl:call-template name="relatedIdentifierISBN"/>
 	</xsl:template>
 	<xsl:template name="subjectGeographicZ">
 		<geographic>
@@ -5493,7 +5529,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 					<xsl:value-of select="marc:subfield[@code='2']"/>
 				</xsl:attribute>
 			</xsl:if>
-			<xsl:value-of select="marc:subfield[@code='9']"/>
+			<xsl:value-of select="marc:subfield[@code='a']"/>
 		</classification>
 	</xsl:template>
 
@@ -5510,6 +5546,11 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			<title>
 				<xsl:value-of select="marc:subfield[@code='a']"/>
 			</title>
+			<xsl:if test="marc:subfield[@code='b']">
+				<subtitle>
+					<xsl:value-of select="marc:subfield[@code='b']"/>
+				</subtitle>
+			</xsl:if>
 		</titleInfo>
 	</xsl:template>
 
